@@ -40,10 +40,10 @@ export function LodgeCard({ lodge }: LodgeCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="group flex flex-col bg-white rounded-3xl border border-[#E8E5DF] overflow-hidden hover:shadow-lg hover:shadow-black/[0.04] hover:border-[#121212]/30 transition-all duration-300"
+      className="group flex flex-col bg-white rounded-2xl border border-[#E8E5DF] overflow-hidden hover:shadow-lg hover:shadow-black/[0.04] hover:border-[#121212]/40 transition-all duration-300"
     >
       {/* 16:9 Image Preview Container */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F9F8F6]">
+      <Link href={`/hostels/${lodge.id}`} className="block relative aspect-[16/10] w-full overflow-hidden bg-[#F9F8F6]">
         <Image
           src={lodge.imageUrl}
           alt={lodge.name}
@@ -52,63 +52,64 @@ export function LodgeCard({ lodge }: LodgeCardProps) {
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
 
-        {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+        {/* Top Architectural Stamps */}
+        <div className="absolute top-3 left-3 right-3 flex items-start justify-between pointer-events-none">
           {lodge.isVerifiedLandlord ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1E513A] text-white text-[11px] font-semibold tracking-wide shadow-sm">
-              <HiShieldCheck className="w-3.5 h-3.5 text-white" />
-              <span>Verified Landlord</span>
-            </span>
+            <div className="bg-[#121212]/95 backdrop-blur-md text-[#FAF2EE] text-[9.5px] font-mono tracking-widest uppercase px-2.5 py-1 border-l-2 border-[#C25E38] shadow-sm flex items-center gap-1.5">
+              <HiShieldCheck className="w-3.5 h-3.5 text-[#C25E38]" />
+              <span>VERIFIED LODGE</span>
+            </div>
           ) : (
-            <span />
+            <div />
           )}
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-xs text-[#121212] text-[11px] font-semibold tracking-wide shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[#1E513A] animate-pulse" />
-            <span>{lodge.availableUnits} Available</span>
-          </span>
+          <div className="bg-white/95 backdrop-blur-md text-[#121212] text-[9.5px] font-mono tracking-wider uppercase px-2.5 py-1 border border-black/10 shadow-xs">
+            <span>{lodge.availableUnits} VACANT</span>
+          </div>
         </div>
 
-        {/* Bottom Walking Distance Pill */}
-        <div className="absolute bottom-3 left-3">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121212]/80 backdrop-blur-md text-[#FAF2EE] text-xs font-medium">
+        {/* Bottom Architectural Distance Caption */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-6">
+          <div className="flex items-center gap-1.5 font-mono text-[10.5px] tracking-wider uppercase text-[#FAF2EE]">
             <RiWalkLine className="w-3.5 h-3.5 text-[#C25E38]" />
             <span>{lodge.walkingMinutes} min walk to {lodge.gateProximity}</span>
-          </span>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Card Content Body */}
       <div className="p-5 flex flex-col flex-1 justify-between">
         <div>
           {/* Zone & Room Type Header */}
-          <div className="flex items-center justify-between text-xs text-[#5A5A58] mb-1.5">
-            <span className="font-semibold uppercase tracking-wider text-[#C25E38]">
+          <div className="flex items-center justify-between font-mono text-[10.5px] tracking-wider uppercase mb-1.5">
+            <span className="font-semibold text-[#C25E38]">
               {lodge.zone}
             </span>
-            <span className="bg-[#FAF2EE] px-2 py-0.5 rounded-md text-[#C25E38] font-medium">
+            <span className="text-[#5A5A58]">
               {lodge.roomType}
             </span>
           </div>
 
           {/* Lodge Name */}
           <h3 className="font-serif text-xl font-bold text-[#121212] tracking-tight group-hover:text-[#C25E38] transition-colors line-clamp-1">
-            {lodge.name}
+            <Link href={`/hostels/${lodge.id}`}>{lodge.name}</Link>
           </h3>
 
-          {/* Key Amenities */}
-          <div className="mt-3.5 flex flex-wrap gap-2 text-xs text-[#5A5A58]">
-            <span className="inline-flex items-center gap-1 bg-[#F9F8F6] px-2.5 py-1 rounded-lg border border-[#E8E5DF]/60">
+          {/* Key Amenities - Clean Typographic Ledger */}
+          <div className="mt-3.5 flex items-center gap-2 text-[11px] font-mono text-[#5A5A58]">
+            <span className="inline-flex items-center gap-1 text-[#121212]">
               <RiDropLine className="w-3.5 h-3.5 text-[#1E513A]" />
-              <span>Borehole Water</span>
+              Borehole
             </span>
-            <span className="inline-flex items-center gap-1 bg-[#F9F8F6] px-2.5 py-1 rounded-lg border border-[#E8E5DF]/60">
+            <span className="text-[#5A5A58]/30 font-bold">•</span>
+            <span className="inline-flex items-center gap-1 text-[#121212]">
               <RiFlashlightLine className="w-3.5 h-3.5 text-[#C25E38]" />
-              <span>Standby Power</span>
+              Standby Gen
             </span>
-            <span className="inline-flex items-center gap-1 bg-[#F9F8F6] px-2.5 py-1 rounded-lg border border-[#E8E5DF]/60">
+            <span className="text-[#5A5A58]/30 font-bold">•</span>
+            <span className="inline-flex items-center gap-1 text-[#121212]">
               <RiShieldCheckLine className="w-3.5 h-3.5 text-[#121212]" />
-              <span>Fenced</span>
+              Fenced
             </span>
           </div>
         </div>
@@ -116,8 +117,8 @@ export function LodgeCard({ lodge }: LodgeCardProps) {
         {/* Pricing & CTA Action Footer */}
         <div className="mt-5 pt-4 border-t border-[#E8E5DF] flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-medium text-[#5A5A58] uppercase tracking-wider">
-              Annual Rent
+            <div className="text-[10px] font-mono font-medium text-[#5A5A58] uppercase tracking-wider">
+              ANNUAL RENT
             </div>
             <div className="text-lg font-bold text-[#121212] tracking-tight">
               {formattedRent}

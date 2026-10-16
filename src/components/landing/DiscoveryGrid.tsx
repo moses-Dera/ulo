@@ -32,48 +32,37 @@ export function DiscoveryGrid({
     : initialLodges;
 
   return (
-    <section id="explore" className="py-16 md:py-24 border-t border-[#E8E5DF]">
+    <section id="explore" className="pt-2 sm:pt-4 pb-16 sm:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#C25E38] mb-2">
-              Curated Accommodations
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#121212] tracking-tight">
-              Explore Verified UNN Lodges
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs text-[#5A5A58]">
-            <span className="font-medium text-[#121212]">{filteredLodges.length}</span>
-            <span>lodges currently accepting reservations</span>
-          </div>
-        </div>
-
-        {/* Gliding Active Pill Zone Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
-          {ZONES.map((zone) => {
+        {/* Minimalist Zone Directory Ledger Tabs */}
+        <div className="flex items-center justify-between border-b border-[#E8E5DF] mb-6 sm:mb-8 overflow-x-auto scrollbar-none">
+          <div className="flex items-center gap-5 sm:gap-8">
+          {ZONES.map((zone, idx) => {
             const isActive = selectedZone === zone.id;
             return (
               <button
                 key={zone.id}
                 onClick={() => onZoneSelect(zone.id)}
-                className={`relative px-5 py-2.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-                  isActive ? "text-white" : "text-[#5A5A58] hover:text-[#121212] bg-white border border-[#E8E5DF]"
+                className={`relative pb-3 pt-1 flex items-center gap-1.5 text-xs uppercase font-mono tracking-wider transition-colors cursor-pointer whitespace-nowrap ${
+                  isActive ? "text-[#121212] font-bold" : "text-[#5A5A58] hover:text-[#121212]"
                 }`}
               >
+                <span>{zone.label}</span>
                 {isActive && (
                   <motion.div
-                    layoutId="activeZonePill"
-                    className="absolute inset-0 bg-[#121212] rounded-full -z-10 shadow-xs"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    layoutId="activeZoneLedger"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C25E38]"
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
-                <span>{zone.label}</span>
               </button>
             );
           })}
+          </div>
+
+          <div className="hidden sm:block text-xs font-mono text-[#5A5A58] whitespace-nowrap pl-4 pb-2">
+            <span className="font-bold text-[#121212]">{filteredLodges.length}</span> properties
+          </div>
         </div>
 
         {/* Lodges Grid */}

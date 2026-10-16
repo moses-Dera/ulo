@@ -2,7 +2,7 @@ import { LandingView } from "@/components/landing/LandingView";
 import { searchService } from "@/modules/search";
 import { LodgeItem } from "@/components/landing/LodgeCard";
 
-export const dynamic = "force-dynamic";
+export const instant = false;
 
 export default async function HomePage() {
   let initialLodges: LodgeItem[] = [];
@@ -18,23 +18,22 @@ export default async function HomePage() {
           "/images/lodge_interior.jpg",
           "/images/lodge_nest.jpg",
         ];
-        const assignedImage = item.primaryImageUrl || fallbackImages[index % fallbackImages.length];
-        const closestGate = item.gateDistances?.[0];
-        const walkingMinutes = closestGate ? Math.max(2, Math.round(closestGate.distanceM / 75)) : 4;
+        const assignedImage = item.primaryImage || fallbackImages[index % fallbackImages.length];
+        const walkingMinutes = item.walkTimeBand ? parseInt(item.walkTimeBand.split("-")[0], 10) || 4 : 4;
 
         return {
           id: item.id,
           name: item.title,
           zone: item.zone,
-          gateProximity: closestGate?.gateName || "Second Gate",
+          gateProximity: item.zone === "Behind Flat" ? "Second Gate" : item.zone === "Hilltop" ? "Hilltop Gate" : "Odim Gate",
           walkingMinutes,
           minRent: item.minRent,
-          roomType: item.roomTypes?.[0]?.name || "Self-Contain",
-          availableUnits: item.availableUnitsCount,
-          totalUnits: item.totalUnitsCount,
+          roomType: item.roomTypeLabels?.[0] || "Self-Contain",
+          availableUnits: item.totalAvailableUnits ?? 2,
+          totalUnits: (item.totalAvailableUnits ?? 2) + 6,
           imageUrl: assignedImage,
           isVerifiedLandlord: item.isVerifiedLandlord,
-          amenities: item.amenities || ["Borehole Water", "Standby Power", "Fenced"],
+          amenities: item.amenities && item.amenities.length > 0 ? item.amenities : ["Borehole Water", "Standby Power", "Fenced"],
         };
       });
     }

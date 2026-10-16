@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiBars3, HiXMark, HiArrowUpRight, HiShieldCheck } from "react-icons/hi2";
+import { HiBars3, HiXMark } from "react-icons/hi2";
 import { RiBuildingLine } from "react-icons/ri";
 
 export function Navbar() {
@@ -25,8 +25,8 @@ export function Navbar() {
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#F9F8F6]/90 backdrop-blur-md border-b border-[#E8E5DF] py-3.5 shadow-xs"
-          : "bg-transparent py-5"
+          ? "bg-[#F9F8F6]/90 backdrop-blur-md border-b border-[#E8E5DF] py-2.5 sm:py-3 shadow-xs"
+          : "bg-transparent py-3 sm:py-3.5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,35 +47,41 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#5A5A58]">
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-[#5A5A58]">
             <a
-              href="#explore"
+              href="/#explore"
               className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Explore Lodges
             </a>
             <a
-              href="#gates"
+              href="/#gates"
               className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Campus Gates
             </a>
             <a
-              href="#standard"
+              href="/#standard"
               className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               The Standard
             </a>
-            <a
-              href="#landlords"
+            <Link
+              href="/dashboard/bookings"
               className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
-              For Landlords
-            </a>
+              My Bookings
+            </Link>
+            <Link
+              href="/landlord/dashboard"
+              className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
+            >
+              Landlord Console
+            </Link>
           </nav>
 
           {/* Auth & CTA Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/auth/login"
               className="text-sm font-medium text-[#121212] hover:text-[#C25E38] transition-colors px-3 py-2"
@@ -83,7 +89,7 @@ export function Navbar() {
               Sign In
             </Link>
             <Link
-              href="/auth/register?role=landlord"
+              href="/landlord/hostels/new"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C25E38] hover:bg-[#A84E2D] text-white text-sm font-medium transition-all shadow-xs hover:shadow-sm active:scale-[0.98]"
             >
               <RiBuildingLine className="w-4 h-4" />
@@ -114,45 +120,61 @@ export function Navbar() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="md:hidden bg-[#F9F8F6] border-b border-[#E8E5DF] px-4 pt-4 pb-6 space-y-4"
           >
-            <nav className="flex flex-col space-y-3 text-base font-medium text-[#121212]">
+            <nav className="flex flex-col space-y-2 text-base font-medium text-[#121212]">
               <a
-                href="#explore"
+                href="/#explore"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors"
               >
                 Explore Lodges
               </a>
               <a
-                href="#gates"
+                href="/#gates"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors"
               >
                 UNN Campus Gates
               </a>
               <a
-                href="#standard"
+                href="/#standard"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors"
               >
                 The Ụlọ Standard
               </a>
-              <a
-                href="#landlords"
+              <Link
+                href="/dashboard/bookings"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors"
+                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
               >
-                For Landlords & Caretakers
-              </a>
+                My Bookings (Student Holds)
+              </Link>
+              <Link
+                href="/landlord/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
+              >
+                Landlord Console
+              </Link>
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors text-xs font-mono uppercase tracking-wider text-[#5A5A58]"
+              >
+                Admin Console
+              </Link>
             </nav>
             <div className="pt-3 border-t border-[#E8E5DF] flex flex-col gap-2.5">
               <Link
                 href="/auth/login"
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-2.5 rounded-xl border border-[#E8E5DF] text-sm font-medium text-[#121212] hover:bg-white transition-colors"
               >
                 Sign In
               </Link>
               <Link
-                href="/auth/register?role=landlord"
+                href="/landlord/hostels/new"
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-2.5 rounded-xl bg-[#C25E38] text-white text-sm font-medium hover:bg-[#A84E2D] transition-colors"
               >
                 List a Lodge (Landlord)

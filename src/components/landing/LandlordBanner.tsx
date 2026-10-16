@@ -12,10 +12,9 @@ export function LandlordBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#C25E38] text-xs font-semibold uppercase tracking-wider mb-6">
-              <RiBuildingLine className="w-4 h-4 text-[#C25E38]" />
-              <span>For Nsukka Property Owners & Caretakers</span>
-            </div>
+            <p className="text-[11px] sm:text-xs font-mono tracking-[0.22em] uppercase text-[#C25E38] mb-4 font-semibold select-none">
+              Direct Landlord Network — UNN Nsukka
+            </p>
 
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
               Fill your vacant student units with zero commission fees.

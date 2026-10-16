@@ -1,10 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { HiShieldCheck } from "react-icons/hi2";
 
 export function Footer() {
+  const [year, setYear] = useState<number | string>(2026);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
   return (
     <footer className="bg-[#121212] text-[#E8E5DF] border-t border-white/10 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,29 +41,29 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-[#E8E5DF]/70">
               <li>
-                <a href="#explore" className="hover:text-white transition-colors">
+                <Link href="/#explore" className="hover:text-white transition-colors">
                   Behind Flat (Second Gate)
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#explore" className="hover:text-white transition-colors">
+                <Link href="/#explore" className="hover:text-white transition-colors">
                   Hilltop & Ofulonu
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#explore" className="hover:text-white transition-colors">
+                <Link href="/#explore" className="hover:text-white transition-colors">
                   Odim Gate
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#explore" className="hover:text-white transition-colors">
+                <Link href="/#explore" className="hover:text-white transition-colors">
                   Green House
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#explore" className="hover:text-white transition-colors">
+                <Link href="/#explore" className="hover:text-white transition-colors">
                   Umunkaka
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -80,14 +85,14 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/bookings" className="hover:text-white transition-colors">
+                <Link href="/dashboard/bookings" className="hover:text-white transition-colors">
                   My Reservation Tracker
                 </Link>
               </li>
               <li>
-                <a href="#gates" className="hover:text-white transition-colors">
+                <Link href="/#gates" className="hover:text-white transition-colors">
                   Campus Gate Proximity Map
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/report" className="hover:text-white transition-colors text-[#C25E38]">
@@ -114,9 +119,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#standard" className="hover:text-white transition-colors">
+                <Link href="/#standard" className="hover:text-white transition-colors">
                   Verification Guidelines
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/legal/privacy" className="hover:text-white transition-colors">
@@ -129,8 +134,8 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#E8E5DF]/50">
-          <div>
-            © {new Date().getFullYear()} Ụlọ Technologies. Curated campus living for UNN. All rights reserved.
+          <div suppressHydrationWarning>
+            © {year} Ụlọ Technologies. Curated campus living for UNN. All rights reserved.
           </div>
           <div>
             Built with respect for the University of Nigeria student community.

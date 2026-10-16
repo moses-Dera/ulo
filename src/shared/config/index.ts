@@ -25,7 +25,14 @@ export const config = {
     sender: process.env.GMAIL_USER || "notifications@ulo.ng",
   },
   storage: {
+    driver: (process.env.STORAGE_DRIVER as "local" | "supabase" | "s3") || "local",
     uploadDir: process.env.UPLOAD_DIR || "./public/uploads",
+    supabase: {
+      url: process.env.SUPABASE_URL,
+      serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      publicBucket: process.env.SUPABASE_STORAGE_PUBLIC_BUCKET || "hostel-images",
+      privateBucket: process.env.SUPABASE_STORAGE_PRIVATE_BUCKET || "verification-documents",
+    },
   },
   limits: {
     maxStudentPendingBookings: 3,

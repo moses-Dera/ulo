@@ -46,10 +46,9 @@ export function GateShowcase() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#C25E38] mb-2">
-            <HiOutlineMapPin className="w-3.5 h-3.5" />
-            <span>Campus Geography</span>
-          </div>
+          <p className="text-[11px] sm:text-xs font-mono tracking-[0.22em] uppercase text-[#C25E38] font-semibold mb-2.5 select-none">
+            Campus Geography — Walking Times
+          </p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#121212] tracking-tight">
             Map Your Walk to 8:00 AM Lectures
           </h2>
@@ -70,14 +69,14 @@ export function GateShowcase() {
               className="p-6 rounded-3xl bg-[#F9F8F6] border border-[#E8E5DF] hover:border-[#121212]/30 hover:shadow-md hover:shadow-black/[0.02] transition-all flex flex-col justify-between"
             >
               <div>
-                {/* Walking Time Badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${gate.badgeColor}`}>
-                    <RiWalkLine className="w-3.5 h-3.5" />
+                {/* Walking Time Architectural Header */}
+                <div className="flex items-center justify-between mb-4 border-b border-[#E8E5DF] pb-3">
+                  <div className="flex items-center gap-1.5 font-mono text-xs font-semibold text-[#C25E38]">
+                    <RiWalkLine className="w-3.5 h-3.5 text-[#C25E38]" />
                     <span>{gate.walkingTime}</span>
-                  </span>
-                  <span className="text-[11px] font-medium text-[#5A5A58]">
-                    {gate.zone}
+                  </div>
+                  <span className="font-mono text-[9.5px] tracking-wider uppercase text-[#5A5A58]">
+                    ZONE // {gate.zone}
                   </span>
                 </div>
 

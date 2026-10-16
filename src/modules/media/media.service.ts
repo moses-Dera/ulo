@@ -14,6 +14,7 @@ import { logSuspiciousUpload } from "./media.events";
 import { config } from "@/shared/config";
 import { TagImageInput } from "./media.schema";
 import { NotFoundError } from "@/shared/errors";
+import { storageService } from "@/shared/storage";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -94,39 +95,48 @@ export class MediaService {
       } catch {}
     }
 
-    // 6. Generate unique identifiers and directory paths
+    // 6. Generate unique identifiers
     const fileId = crypto.randomUUID();
-    const uploadsDir = path.resolve(process.cwd(), "public/uploads/lodges");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
     const mainFilename = `${fileId}.webp`;
     const thumbFilename = `${fileId}_thumb.webp`;
 
-    const mainFilePath = path.join(uploadsDir, mainFilename);
-    const thumbFilePath = path.join(uploadsDir, thumbFilename);
-
     // 7. Re-encode to WebP at 80% quality, STRIPPING EXIF / GPS data (TC-013)
-    await imageInstance
+    const mainWebpBuffer = await imageInstance
       .rotate() // auto-orient based on EXIF before stripping
       .webp({ quality: 80 })
-      .toFile(mainFilePath);
+      .toBuffer();
 
     // 8. Generate 300px thumbnail variant for fast grid card loading on mobile 3G
-    await sharp(fileBuffer)
+    const thumbWebpBuffer = await sharp(fileBuffer)
       .rotate()
       .resize(300, 200, { fit: "cover" })
       .webp({ quality: 75 })
-      .toFile(thumbFilePath);
+      .toBuffer();
 
-    const storageKey = `/uploads/lodges/${mainFilename}`;
-    const thumbKey = `/uploads/lodges/${thumbFilename}`;
+    // 9. Store via storageService (Local filesystem on localhost, Supabase CDN in production)
+    const [mainUpload, thumbUpload] = await Promise.all([
+      storageService.upload({
+        bucket: "public",
+        folder: "lodges",
+        filename: mainFilename,
+        buffer: mainWebpBuffer,
+        contentType: "image/webp",
+      }),
+      storageService.upload({
+        bucket: "public",
+        folder: "lodges",
+        filename: thumbFilename,
+        buffer: thumbWebpBuffer,
+        contentType: "image/webp",
+      }),
+    ]);
 
-    // 9. Save database record
+    // 10. Save database record
     const saved = await mediaRepo.saveImage({
       hostelId,
       roomTypeId: metadata.roomTypeId,
-      storageKey,
-      thumbKey,
+      storageKey: mainUpload.storageKey,
+      thumbKey: thumbUpload.storageKey,
       tag: metadata.tag,
       isPrimary: metadata.isPrimary || count === 0, // First photo uploaded becomes primary automatically
       position: metadata.position || count + 1,

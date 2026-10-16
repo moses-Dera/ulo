@@ -37,10 +37,9 @@ export function TheStandard() {
     <section id="standard" className="py-20 md:py-28 bg-[#F9F8F6] border-t border-[#E8E5DF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#C25E38] mb-2">
-            <HiOutlineSparkles className="w-3.5 h-3.5" />
-            <span>Fair Student Housing</span>
-          </div>
+          <p className="text-[11px] sm:text-xs font-mono tracking-[0.22em] uppercase text-[#C25E38] font-semibold mb-2.5 select-none">
+            The Ụlọ Standard — Fair Student Living
+          </p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#121212] tracking-tight">
             The Ụlọ Standard
           </h2>
