@@ -118,6 +118,7 @@ export const hostels = pgTable(
     latitude: numeric("latitude", { precision: 10, scale: 7 }),
     longitude: numeric("longitude", { precision: 10, scale: 7 }),
     mapsUrl: text("maps_url"), // Private until booking approval
+    videoUrl: text("video_url"), // Compound video walkthrough or virtual tour URL (Supabase S3 MP4 or YouTube/Vimeo)
     locationVerified: boolean("location_verified").default(false).notNull(),
     status: varchar("status", { length: 50 }).default("draft").notNull(), // 'draft' | 'pending_review' | 'published' | 'rejected' | 'suspended'
     reviewReason: text("review_reason"),

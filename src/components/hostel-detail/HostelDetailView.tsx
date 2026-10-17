@@ -33,6 +33,7 @@ interface HostelDetailViewProps {
     streetText?: string | null;
     nearestGateName?: string | null;
     walkTimeBand?: string | null;
+    videoUrl?: string | null;
     images: Array<{
       id: string;
       storageKey: string;
@@ -124,6 +125,12 @@ export function HostelDetailView({ hostel }: HostelDetailViewProps) {
                 <HiShieldCheck className="w-4 h-4 text-[#C25E38]" />
                 <span>VERIFIED LODGE</span>
               </div>
+              {hostel.videoUrl && (
+                <div className="bg-[#1E513A] text-white text-[10px] font-mono tracking-widest uppercase px-3 py-1.5 rounded-lg border-l-2 border-[#4E9F76] flex items-center gap-1.5 shadow-xs">
+                  <HiOutlineCheckBadge className="w-4 h-4 text-white" />
+                  <span>VIRTUAL TOUR</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -131,8 +138,8 @@ export function HostelDetailView({ hostel }: HostelDetailViewProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Left Column (65% width): Gallery, Specs, Curfew, Description */}
             <div className="lg:col-span-8 space-y-10">
-              {/* Photo Gallery */}
-              <HostelGallery images={hostel.images} title={hostel.title} />
+              {/* Photo Gallery & Video Player */}
+              <HostelGallery images={hostel.images} title={hostel.title} videoUrl={hostel.videoUrl} />
 
               {/* Audited Utilities & Facilities Matrix */}
               <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#E8E5DF] shadow-xs space-y-6">

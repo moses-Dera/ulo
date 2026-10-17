@@ -28,6 +28,7 @@ export class PropertiesMapper {
       // Private fields stripped for general public
       exactAddress: revealPrivateDetails ? data.hostel.exactAddress : undefined,
       mapsUrl: revealPrivateDetails ? data.hostel.mapsUrl : undefined,
+      videoUrl: data.hostel.videoUrl,
       nearestGateId: data.hostel.nearestGateId,
       nearestGateName: data.nearestGateName,
       walkTimeBand: data.hostel.walkTimeBand,

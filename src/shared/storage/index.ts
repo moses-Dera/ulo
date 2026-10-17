@@ -5,7 +5,7 @@ import { logger } from "@/shared/logger";
 
 export interface UploadFileOptions {
   bucket: "public" | "private";
-  folder: "lodges" | "verifications";
+  folder: "lodges" | "verifications" | "videos";
   filename: string;
   buffer: Buffer;
   contentType: string;
@@ -68,8 +68,8 @@ class SupabaseStorageDriver implements StorageDriver {
   constructor() {
     this.supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "").replace(/\/$/, "");
     this.serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
-    this.publicBucket = process.env.SUPABASE_STORAGE_PUBLIC_BUCKET || "hostel-images";
-    this.privateBucket = process.env.SUPABASE_STORAGE_PRIVATE_BUCKET || "verification-documents";
+    this.publicBucket = process.env.SUPABASE_STORAGE_PUBLIC_BUCKET || "ulo";
+    this.privateBucket = process.env.SUPABASE_STORAGE_PRIVATE_BUCKET || "ulo";
   }
 
   private isConfigured(): boolean {

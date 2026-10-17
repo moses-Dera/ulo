@@ -15,7 +15,7 @@ import {
   bookings,
 } from "./schema";
 import { hashPassword } from "../security/password";
-import { sql } from "drizzle-orm";
+import { sql, inArray } from "drizzle-orm";
 
 async function seed() {
   console.log("🌱 Starting Ụlọ database seed...");
@@ -226,6 +226,9 @@ async function seed() {
       set: { verificationStatus: "verified" },
     });
 
+  // Ensure idempotent seeding: remove previous seed hostels for these test landlords to prevent duplicates
+  await db.delete(hostels).where(inArray(hostels.landlordId, [l1User.id, l2User.id, l3User.id]));
+
   // Seed Hostel 1 (Behind Flat - St. Jude's Luxury Lodge)
   const [hostel1] = await db
     .insert(hostels)
@@ -243,6 +246,7 @@ async function seed() {
       latitude: "6.8698000",
       longitude: "7.4118000",
       mapsUrl: "https://maps.google.com/?q=6.8698000,7.4118000",
+      videoUrl: "https://www.youtube.com/watch?v=ScMzIvxBSi4", // Compound video tour embed
       locationVerified: true,
       status: "published",
     })
@@ -341,6 +345,7 @@ async function seed() {
       latitude: "6.8782000",
       longitude: "7.4125000",
       mapsUrl: "https://maps.google.com/?q=6.8782000,7.4125000",
+      videoUrl: "https://rkfjmokmtovotbrcizqi.supabase.co/storage/v1/object/public/ulo/videos/hilltop-tour.mp4", // Supabase S3 direct MP4 storage
       locationVerified: true,
       status: "published",
     })

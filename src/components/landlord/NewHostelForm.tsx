@@ -93,6 +93,7 @@ export function NewHostelForm() {
   const [selectedPhoto, setSelectedPhoto] = useState(PRESET_PHOTOGRAPHY[0].url);
   const [customPhotos, setCustomPhotos] = useState<File[]>([]);
   const [customPhotoPreviews, setCustomPhotoPreviews] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   // Form Submission State
@@ -140,6 +141,7 @@ export function NewHostelForm() {
         exactAddress,
         nearestGateId,
         walkTimeBand,
+        videoUrl: videoUrl.trim() || undefined,
         amenityIds: selectedAmenities,
       };
 
@@ -615,6 +617,23 @@ export function NewHostelForm() {
                 </div>
               </div>
             )}
+
+            {/* Compound Video Walkthrough (Supabase S3 MP4 or YouTube) */}
+            <div className="pt-5 border-t border-[#E8E5DF] space-y-2">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#5A5A58] font-semibold">
+                Optional: Compound Video Walkthrough (YouTube, Vimeo, or Direct MP4)
+              </label>
+              <input
+                type="url"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=... or https://.../video.mp4"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F7F4] border border-[#DCD8D0] text-xs font-mono text-[#121212] focus:bg-white focus:outline-none focus:border-[#121212]"
+              />
+              <p className="text-[11px] text-[#5A5A58] font-sans">
+                Provide a continuous video walkthrough showing the perimeter gate, water supply tanks, and rooms. Verified lodges with video tours receive priority placement.
+              </p>
+            </div>
           </div>
 
           {/* Submit Action Bar */}

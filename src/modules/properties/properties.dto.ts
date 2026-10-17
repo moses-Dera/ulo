@@ -24,6 +24,7 @@ export interface HostelDetailDto {
   latitude: string | null;
   longitude: string | null;
   mapsUrl?: string | null; // Revealed only when authorized
+  videoUrl?: string | null; // Video walkthrough (Supabase MP4 or YouTube)
   locationVerified: boolean;
   status: string;
   reviewReason: string | null;

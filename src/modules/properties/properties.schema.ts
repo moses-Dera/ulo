@@ -12,6 +12,7 @@ export const createHostelSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   mapsUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  videoUrl: z.string().url("Must be a valid video walkthrough URL").optional().or(z.literal("")),
   amenityIds: z.array(z.string().uuid()).optional().default([]),
 });
 

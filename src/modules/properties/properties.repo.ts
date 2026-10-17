@@ -80,6 +80,7 @@ export class PropertiesRepo {
           latitude: data.latitude ? data.latitude.toString() : null,
           longitude: data.longitude ? data.longitude.toString() : null,
           mapsUrl: data.mapsUrl || null,
+          videoUrl: data.videoUrl || null,
           status: "draft",
         })
         .returning();
@@ -111,6 +112,7 @@ export class PropertiesRepo {
     if (data.latitude !== undefined) updateValues.latitude = data.latitude ? data.latitude.toString() : null;
     if (data.longitude !== undefined) updateValues.longitude = data.longitude ? data.longitude.toString() : null;
     if (data.mapsUrl !== undefined) updateValues.mapsUrl = data.mapsUrl || null;
+    if (data.videoUrl !== undefined) updateValues.videoUrl = data.videoUrl || null;
 
     const [updated] = await db.update(hostels).set(updateValues).where(eq(hostels.id, id)).returning();
     return updated;

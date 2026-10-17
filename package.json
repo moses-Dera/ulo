@@ -11,9 +11,13 @@
     "db:stop": "./scripts/db.sh stop",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx src/shared/db/seed.ts"
+    "db:push:supabase": "DATABASE_URL=\"$SUPABASE_DATABASE_URL\" drizzle-kit push",
+    "db:seed": "tsx src/shared/db/seed.ts",
+    "db:seed:supabase": "DATABASE_URL=\"$SUPABASE_DATABASE_URL\" tsx src/shared/db/seed.ts",
+    "storage:sync": "tsx scripts/sync_storage_to_supabase.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
     "@googleapis/gmail": "^22.0.2",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
