@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import {
   HiShieldCheck,
   HiOutlineBuildingOffice2,
@@ -35,6 +36,10 @@ export function DashboardNav({ role }: DashboardNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  // Silent token refresh — keeps the access cookie alive every 14 min.
+  // Also intercepts 401s from any fetch() on this page and retries after refresh.
+  useTokenRefresh();
 
   useEffect(() => {
     async function loadUser() {
