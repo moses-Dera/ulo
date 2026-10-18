@@ -41,9 +41,21 @@ export function LoginForm() {
           ? "/admin"
           : "/dashboard/bookings");
 
-      // Role safety guard: students cannot access landlord/admin routes
-      if (role === "student" && (target.startsWith("/landlord") || target.startsWith("/admin"))) {
-        target = "/dashboard/bookings";
+      // Intelligent role safety guard:
+      if (role === "landlord") {
+        // If a landlord clicked "View Bookings" or student links before logging in, route them to their landlord dashboard
+        if (target.startsWith("/dashboard") || target === "/bookings" || target === "/") {
+          target = "/landlord/dashboard";
+        }
+      } else if (role === "student") {
+        // Students cannot access landlord or admin routes
+        if (target.startsWith("/landlord") || target.startsWith("/admin")) {
+          target = "/dashboard/bookings";
+        }
+      } else if (role === "admin") {
+        if (!redirectParam || target === "/") {
+          target = "/admin";
+        }
       }
 
       // Hard redirect to force full browser cookie synchronization and avoid stale router cache

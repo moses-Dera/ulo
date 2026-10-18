@@ -83,18 +83,29 @@ export function Navbar() {
             >
               The Standard
             </a>
-            <Link
-              href="/dashboard/bookings"
-              className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
-            >
-              My Bookings
-            </Link>
-            <Link
-              href="/landlord/dashboard"
-              className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
-            >
-              Landlord Console
-            </Link>
+            {user?.role === "landlord" ? (
+              <Link
+                href="/landlord/dashboard"
+                className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
+              >
+                Occupancy & Bookings
+              </Link>
+            ) : (
+              <Link
+                href="/dashboard/bookings"
+                className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
+              >
+                My Bookings
+              </Link>
+            )}
+            {(!user || user.role === "landlord") && (
+              <Link
+                href="/landlord/dashboard"
+                className="hover:text-[#121212] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-[2px] after:bg-[#C25E38] after:absolute after:bottom-0 after:left-0 after:transition-all"
+              >
+                Landlord Console
+              </Link>
+            )}
           </nav>
 
           {/* Auth & CTA Buttons */}
@@ -206,20 +217,32 @@ export function Navbar() {
                   <span>My Profile ({user.fullName})</span>
                 </Link>
               )}
-              <Link
-                href="/dashboard/bookings"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
-              >
-                My Bookings (Student Holds)
-              </Link>
-              <Link
-                href="/landlord/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
-              >
-                Landlord Console
-              </Link>
+              {user?.role === "landlord" ? (
+                <Link
+                  href="/landlord/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
+                >
+                  Occupancy & Bookings Ledger
+                </Link>
+              ) : (
+                <Link
+                  href="/dashboard/bookings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
+                >
+                  My Bookings (Student Holds)
+                </Link>
+              )}
+              {(!user || user.role === "landlord") && (
+                <Link
+                  href="/landlord/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 px-3 rounded-lg hover:bg-[#E8E5DF] transition-colors font-semibold"
+                >
+                  Landlord Console
+                </Link>
+              )}
               <Link
                 href="/admin"
                 onClick={() => setMobileMenuOpen(false)}

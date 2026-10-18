@@ -94,12 +94,17 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. AuthGuard for Student Dashboard (/dashboard/*)
-  if (pathname.startsWith("/dashboard")) {
+  // 4. AuthGuard & RoleGuard for Student Dashboard (/dashboard/*, /bookings)
+  if (pathname.startsWith("/dashboard") || pathname === "/bookings") {
     if (!isAuthenticated) {
       const loginUrl = new URL("/auth/login", req.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+
+    // RoleGuard: Landlords managing accommodations should be on their landlord console
+    if (userRole === "landlord") {
+      return NextResponse.redirect(new URL("/landlord/dashboard", req.url));
     }
 
     return NextResponse.next();
@@ -127,6 +132,8 @@ export const config = {
     "/admin/:path*",
     "/dashboard/:path*",
     "/profile/:path*",
+    "/bookings/:path*",
+    "/bookings",
     "/auth/login",
     "/auth/register",
   ],
