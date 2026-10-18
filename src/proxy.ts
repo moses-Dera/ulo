@@ -105,6 +105,17 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // 5. AuthGuard for User Profile (/profile/*)
+  if (pathname.startsWith("/profile")) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL("/auth/login", req.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
@@ -115,6 +126,7 @@ export const config = {
     "/landlord/:path*",
     "/admin/:path*",
     "/dashboard/:path*",
+    "/profile/:path*",
     "/auth/login",
     "/auth/register",
   ],

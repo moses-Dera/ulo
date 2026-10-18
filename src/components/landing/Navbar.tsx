@@ -9,12 +9,29 @@ import { RiBuildingLine } from "react-icons/ri";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ id: string; fullName: string; role: string; email: string } | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
+
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/v1/auth/me");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data?.user) {
+            setUser(json.data.user);
+          }
+        }
+      } catch {
+        // Handled silently
+      }
+    }
+    checkAuth();
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -82,19 +99,54 @@ export function Navbar() {
 
           {/* Auth & CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="text-sm font-medium text-[#121212] hover:text-[#C25E38] transition-colors px-3 py-2"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/landlord/hostels/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C25E38] hover:bg-[#A84E2D] text-white text-sm font-medium transition-all shadow-xs hover:shadow-sm active:scale-[0.98]"
-            >
-              <RiBuildingLine className="w-4 h-4" />
-              <span>List a Lodge</span>
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-[#121212] hover:text-[#C25E38] hover:bg-white/60 transition-colors"
+                >
+                  <div className="w-6 h-6 rounded-md bg-[#FAF2EE] text-[#C25E38] font-bold text-xs flex items-center justify-center border border-[#E8E5DF]">
+                    {user.fullName ? user.fullName[0].toUpperCase() : "Ụ"}
+                  </div>
+                  <span>My Profile</span>
+                </Link>
+                <Link
+                  href={
+                    user.role === "landlord"
+                      ? "/landlord/dashboard"
+                      : user.role === "admin"
+                      ? "/admin"
+                      : "/dashboard/bookings"
+                  }
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#121212] hover:bg-[#2A2A2A] text-white text-sm font-medium transition-all shadow-xs hover:shadow-sm active:scale-[0.98]"
+                >
+                  <RiBuildingLine className="w-4 h-4 text-[#C25E38]" />
+                  <span>
+                    {user.role === "landlord"
+                      ? "Landlord Console"
+                      : user.role === "admin"
+                      ? "Admin Console"
+                      : "My 72h Holds"}
+                  </span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className="text-sm font-medium text-[#121212] hover:text-[#C25E38] transition-colors px-3 py-2"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/landlord/hostels/new"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C25E38] hover:bg-[#A84E2D] text-white text-sm font-medium transition-all shadow-xs hover:shadow-sm active:scale-[0.98]"
+                >
+                  <RiBuildingLine className="w-4 h-4" />
+                  <span>List a Lodge</span>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -142,6 +194,18 @@ export function Navbar() {
               >
                 The Ụlọ Standard
               </a>
+              {user && (
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 px-3 rounded-lg bg-[#FAF2EE] text-[#C25E38] hover:bg-[#F3E5DE] transition-colors font-semibold flex items-center gap-2"
+                >
+                  <div className="w-5 h-5 rounded-md bg-[#C25E38] text-white text-[11px] font-bold flex items-center justify-center">
+                    {user.fullName ? user.fullName[0].toUpperCase() : "Ụ"}
+                  </div>
+                  <span>My Profile ({user.fullName})</span>
+                </Link>
+              )}
               <Link
                 href="/dashboard/bookings"
                 onClick={() => setMobileMenuOpen(false)}
@@ -165,20 +229,32 @@ export function Navbar() {
               </Link>
             </nav>
             <div className="pt-3 border-t border-[#E8E5DF] flex flex-col gap-2.5">
-              <Link
-                href="/auth/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl border border-[#E8E5DF] text-sm font-medium text-[#121212] hover:bg-white transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/landlord/hostels/new"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl bg-[#C25E38] text-white text-sm font-medium hover:bg-[#A84E2D] transition-colors"
-              >
-                List a Lodge (Landlord)
-              </Link>
+              {user ? (
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 rounded-xl bg-[#121212] text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors"
+                >
+                  Manage Account & Profile
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 rounded-xl border border-[#E8E5DF] text-sm font-medium text-[#121212] hover:bg-white transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/landlord/hostels/new"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 rounded-xl bg-[#C25E38] text-white text-sm font-medium hover:bg-[#A84E2D] transition-colors"
+                  >
+                    List a Lodge (Landlord)
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}

@@ -77,11 +77,13 @@ export function DashboardNav({ role }: DashboardNavProps) {
     { href: "/landlord/dashboard", label: "Occupancy Ledger" },
     { href: "/landlord/hostels/new", label: "List New Lodge" },
     { href: "/landlord/verification", label: "Verification Audit" },
+    { href: "/profile", label: "My Profile" },
     { href: "/#explore", label: "Public Directory" },
   ];
 
   const studentLinks = [
     { href: "/dashboard/bookings", label: "My 72h Holds" },
+    { href: "/profile", label: "My Profile" },
     { href: "/#explore", label: "Browse Lodges" },
     { href: "/#gates", label: "Campus Gates" },
     { href: "/#standard", label: "The Ụlọ Standard" },
@@ -89,6 +91,7 @@ export function DashboardNav({ role }: DashboardNavProps) {
 
   const adminLinks = [
     { href: "/admin", label: "Moderation Queue" },
+    { href: "/profile", label: "My Profile" },
     { href: "/#explore", label: "Public Directory" },
     { href: "/dashboard/bookings", label: "Student Preview" },
     { href: "/landlord/dashboard", label: "Landlord Preview" },
@@ -150,14 +153,22 @@ export function DashboardNav({ role }: DashboardNavProps) {
 
           {/* Right: User Identity & Sign Out */}
           <div className="hidden sm:flex items-center gap-3">
-            <div className="flex flex-col text-right">
-              <span className="text-xs font-semibold text-[#121212] leading-tight">
-                {user?.fullName || (role === "landlord" ? "Verified Landlord" : role === "admin" ? "Platform Admin" : "UNN Student")}
-              </span>
-              <span className="text-[10px] font-mono text-[#5A5A58]">
-                {user?.email || "Authenticated Session"}
-              </span>
-            </div>
+            <Link
+              href="/profile"
+              className="flex items-center gap-2.5 p-1.5 pl-2.5 pr-2 rounded-xl border border-transparent hover:border-[#E8E5DF] hover:bg-white transition-all group"
+            >
+              <div className="flex flex-col text-right">
+                <span className="text-xs font-semibold text-[#121212] leading-tight group-hover:text-[#C25E38] transition-colors">
+                  {user?.fullName || (role === "landlord" ? "Verified Landlord" : role === "admin" ? "Platform Admin" : "UNN Student")}
+                </span>
+                <span className="text-[10px] font-mono text-[#5A5A58]">
+                  {user?.email || "Authenticated Session"}
+                </span>
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-[#FAF2EE] border border-[#E8E5DF] text-[#C25E38] flex items-center justify-center font-bold text-xs group-hover:bg-[#C25E38] group-hover:text-white transition-colors">
+                {user?.fullName ? user.fullName[0].toUpperCase() : <HiOutlineUser className="w-4 h-4" />}
+              </div>
+            </Link>
 
             <button
               onClick={handleLogout}
