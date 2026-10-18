@@ -2,11 +2,14 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { HiOutlineLockClosed, HiOutlineEnvelope, HiArrowRight } from "react-icons/hi2";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -30,16 +33,23 @@ export function LoginForm() {
       }
 
       const role = data.data?.user?.role;
-      if (role === "landlord") {
-        router.push("/landlord/dashboard");
-      } else if (role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard/bookings");
+      let target =
+        redirectParam ||
+        (role === "landlord"
+          ? "/landlord/dashboard"
+          : role === "admin"
+          ? "/admin"
+          : "/dashboard/bookings");
+
+      // Role safety guard: students cannot access landlord/admin routes
+      if (role === "student" && (target.startsWith("/landlord") || target.startsWith("/admin"))) {
+        target = "/dashboard/bookings";
       }
+
+      // Hard redirect to force full browser cookie synchronization and avoid stale router cache
+      window.location.href = target;
     } catch (err: any) {
       setError(err.message || "Login failed. Please check credentials.");
-    } finally {
       setSubmitting(false);
     }
   };
