@@ -180,29 +180,28 @@ export class PropertiesRepo {
   }
 
   async countApprovedBookingsAndBlocks(roomTypeId: string, sessionId: string) {
-    const approved = await db
-      .select({ count: sql<number>`count(*)` })
+    // Single round-trip: count approved bookings + sum unit blocks together
+    const [row] = await db
+      .select({
+        approvedCount: sql<number>`count(*) filter (where ${bookings.status} = 'APPROVED')`,
+        blockedCount: sql<number>`coalesce(
+          (select sum(ub.units_blocked)
+           from unit_blocks ub
+           where ub.room_type_id = ${roomTypeId}
+             and ub.session_id = ${sessionId}),
+          0
+        )`,
+      })
       .from(bookings)
       .where(
         and(
           eq(bookings.roomTypeId, roomTypeId),
-          eq(bookings.sessionId, sessionId),
-          eq(bookings.status, "APPROVED")
+          eq(bookings.sessionId, sessionId)
         )
       );
 
-    const blocks = await db
-      .select({ sum: sql<number>`coalesce(sum(${unitBlocks.unitsBlocked}), 0)` })
-      .from(unitBlocks)
-      .where(
-        and(
-          eq(unitBlocks.roomTypeId, roomTypeId),
-          eq(unitBlocks.sessionId, sessionId)
-        )
-      );
-
-    const approvedCount = Number(approved[0]?.count || 0);
-    const blockedCount = Number(blocks[0]?.sum || 0);
+    const approvedCount = Number(row?.approvedCount ?? 0);
+    const blockedCount = Number(row?.blockedCount ?? 0);
 
     return { approvedCount, blockedCount, totalOccupied: approvedCount + blockedCount };
   }

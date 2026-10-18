@@ -259,6 +259,12 @@ export const bookings = pgTable(
       .where(sql`status = 'APPROVED'`),
     index("idx_bookings_room_status").on(table.roomTypeId, table.status),
     index("idx_bookings_student_status").on(table.studentId, table.status),
+    // Partial index: expiry cron only scans PENDING rows — avoids full-table scan
+    index("idx_bookings_pending_expires")
+      .on(table.expiresAt)
+      .where(sql`status = 'PENDING'`),
+    // Covering index for landlord dashboard: filters by status, sorts by requestedAt
+    index("idx_bookings_status_requested_at").on(table.status, table.requestedAt),
   ]
 );
 
@@ -286,16 +292,23 @@ export const bannedIdentifiers = pgTable("banned_identifiers", {
 });
 
 // 18. Notifications Table
-export const notifications = pgTable("notifications", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 100 }).notNull(),
-  payload: text("payload").notNull(), // JSON string
-  sentAt: timestamp("sent_at").defaultNow().notNull(),
-  readAt: timestamp("read_at"),
-});
+export const notifications = pgTable(
+  "notifications",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 100 }).notNull(),
+    payload: text("payload").notNull(), // JSON string
+    sentAt: timestamp("sent_at").defaultNow().notNull(),
+    readAt: timestamp("read_at"),
+  },
+  (table) => [
+    // Compound index: unread-count queries filter by userId + readAt IS NULL
+    index("idx_notifications_user_read").on(table.userId, table.readAt),
+  ]
+);
 
 // 19. Audit Logs Table
 export const auditLogs = pgTable(

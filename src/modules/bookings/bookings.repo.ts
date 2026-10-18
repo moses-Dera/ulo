@@ -43,7 +43,7 @@ export class BookingsRepo {
     return record || null;
   }
 
-  async findStudentBookings(studentId: string) {
+  async findStudentBookings(studentId: string, opts?: { limit?: number; offset?: number }) {
     return db
       .select({
         booking: bookings,
@@ -57,10 +57,12 @@ export class BookingsRepo {
       .innerJoin(landlords, eq(hostels.landlordId, landlords.userId))
       .innerJoin(users, eq(landlords.userId, users.id))
       .where(eq(bookings.studentId, studentId))
-      .orderBy(sql`${bookings.requestedAt} DESC`);
+      .orderBy(sql`${bookings.requestedAt} DESC`)
+      .limit(opts?.limit ?? 50)
+      .offset(opts?.offset ?? 0);
   }
 
-  async findLandlordBookings(landlordId: string) {
+  async findLandlordBookings(landlordId: string, opts?: { limit?: number; offset?: number }) {
     return db
       .select({
         booking: bookings,
@@ -75,7 +77,9 @@ export class BookingsRepo {
       .innerJoin(students, eq(bookings.studentId, students.userId))
       .innerJoin(users, eq(students.userId, users.id))
       .where(eq(hostels.landlordId, landlordId))
-      .orderBy(sql`${bookings.requestedAt} DESC`);
+      .orderBy(sql`${bookings.requestedAt} DESC`)
+      .limit(opts?.limit ?? 100)
+      .offset(opts?.offset ?? 0);
   }
 
   async countStudentPending(studentId: string) {
@@ -154,42 +158,40 @@ export class BookingsRepo {
    */
   async approveBookingAtomic(bookingId: string, studentId: string, roomTypeId: string, sessionId: string, decisionNote?: string) {
     return db.transaction(async (tx) => {
-      // 1. Lock the room_types row with SELECT ... FOR UPDATE
+      // 1. Lock the room_types row — SKIP LOCKED prevents blocking concurrent approvals
       const lockedRooms = await tx
         .select()
         .from(roomTypes)
         .where(eq(roomTypes.id, roomTypeId))
-        .for("update");
+        .for("update", { skipLocked: true });
 
       const lockedRoom = lockedRooms[0];
       if (!lockedRoom) {
-        throw new RoomFullyBookedError("Room type not found");
+        throw new RoomFullyBookedError("Room type not found or locked by another request");
       }
 
-      // 2. Count current approved bookings in this session
-      const approvedResult = await tx
-        .select({ count: sql<number>`count(*)` })
+      // 2+3. Single query: count approved bookings AND sum unit blocks together
+      const [vacancyRow] = await tx
+        .select({
+          approvedCount: sql<number>`count(*) filter (where ${bookings.status} = 'APPROVED')`,
+          blockedCount: sql<number>`coalesce(
+            (select sum(ub.units_blocked)
+             from unit_blocks ub
+             where ub.room_type_id = ${roomTypeId}
+               and ub.session_id = ${sessionId}),
+            0
+          )`,
+        })
         .from(bookings)
         .where(
           and(
             eq(bookings.roomTypeId, roomTypeId),
-            eq(bookings.sessionId, sessionId),
-            eq(bookings.status, "APPROVED")
+            eq(bookings.sessionId, sessionId)
           )
         );
-      const approvedCount = Number(approvedResult[0]?.count || 0);
 
-      // 3. Count unit blocks in this session
-      const blockedResult = await tx
-        .select({ sum: sql<number>`coalesce(sum(${unitBlocks.unitsBlocked}), 0)` })
-        .from(unitBlocks)
-        .where(
-          and(
-            eq(unitBlocks.roomTypeId, roomTypeId),
-            eq(unitBlocks.sessionId, sessionId)
-          )
-        );
-      const blockedCount = Number(blockedResult[0]?.sum || 0);
+      const approvedCount = Number(vacancyRow?.approvedCount ?? 0);
+      const blockedCount = Number(vacancyRow?.blockedCount ?? 0);
 
       // 4. Verify vacancy
       const vacancy = lockedRoom.totalUnits - approvedCount - blockedCount;
