@@ -14,6 +14,29 @@
 * **Core Tech Stack:** Next.js 16 (App Router, Server Actions), React 19, TypeScript 5, PostgreSQL 17/18, Drizzle ORM, TailwindCSS v4, Docker & Adminer
 * **Defense Format:** Strict 20-minute protocol with individual scoring (5 min Slides, 10 min Live Demo, 5 min Q&A)
 
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                              DEFENSE DAY CHEAT SHEET                                   │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. 20 Mins Before Entering:                                                            │
+│    - Plug in laptop power and set screen to "Never Sleep".                             │
+│    - Start system: ./start_all.sh (Linux/Mac) OR double-click start_all.bat (Windows).│
+│                                                                                        │
+│ 2. Browser Tabs Pre-Opened in Chrome:                                                  │
+│    - Tab 1: http://localhost:3000                 (Student Portal)                     │
+│    - Tab 2: http://localhost:3000/landlord/dashboard (Landlord Portal - Incognito)     │
+│    - Tab 3: http://localhost:3000/admin/verifications (Admin Portal - Incognito)       │
+│    - Tab 4: http://localhost:8080                 (Adminer DB GUI)                     │
+│                                                                                        │
+│ 3. The 20-Minute Defense Execution:                                                    │
+│    - 00:00 - 05:00: PowerPoint Slides (6 Slides strictly as written in Manual)         │
+│    - 05:00 - 08:20: Member 1 demonstrates Table Schema & Form-to-DB live insertion    │
+│    - 08:20 - 11:40: Member 2 demonstrates the 4 Study Objectives on the running UI    │
+│    - 11:40 - 15:00: Member 3 demonstrates Unit Functions, BFF Auth & System Modules    │
+│    - 15:00 - 20:00: Individual Examiner Q&A and Scoring                               │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 # SECTION 1: THE 20-MINUTE DEFENSE TIMETABLE & PRE-DEFENSE WARMUP
